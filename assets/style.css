@@ -1,0 +1,14 @@
+body::before {
+    content: "";
+    background: url('/assets/images/day.jpg') no-repeat center center fixed;
+    background-size: cover;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+.low-opacity{
+    background-color: rgba(255, 255, 255, 0.8);
+}
