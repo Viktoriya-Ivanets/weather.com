@@ -18,6 +18,36 @@ function getForecastWeather(string $apiKey)
 
     curl_close($ch);
     $data = json_decode($response);
-    $data = $data->forecast->forecastday;
-    return $data;
+    return getFormatedDate($data);
+}
+function getFormatedDate($weatherData)
+{
+    foreach ($weatherData->forecast->forecastday as $day) {
+        $date = new DateTime($day->date);
+        $day->day_of_week = $date->format('D');
+        $day->day_of_month = $date->format('d');
+        $day->month = $date->format('M');
+    }
+    return $weatherData;
+}
+function getTodaysSunData($weatherData)
+{
+    $currentDate = date("Y-m-d");
+    foreach ($weatherData->forecast->forecastday as $day) {
+        if ($day->date === $currentDate) {
+            return $day->astro;
+        }
+    }
+}
+function getTodaysPerHourWeather($weatherData)
+{
+    $currentDate = date("Y-m-d");
+    foreach ($weatherData->forecast->forecastday as $day) {
+        if ($day->date === $currentDate) {
+            foreach ($day->hour as $hour) {
+                $hour->time = str_replace($currentDate, "", $hour->time);
+            }
+            return $day->hour;
+        }
+    }
 }
