@@ -1,19 +1,39 @@
 <?php
+
 include_once('init.php');
-$currentWeather = getCurrentWeather(API_KEY);
-$forecastWeather = getForecastWeather(API_KEY);
-$astroInfo = getTodaysSunData($forecastWeather);
-$perHourInfo = getTodaysPerHourWeather($forecastWeather);
+
+//Days for forecast request - default 5
+$forecast_days = isset($_GET['forecast_days']) ? $_GET['forecast_days'] : 5;
+
+//City for weather request - default Chernihiv
+$city = isset($_GET['city']) ? $_GET['city'] : 'Chernihiv';
+
+//Get full weather info
+$forecastWeather = getForecastAndCurrentWeather(API_KEY, $forecast_days, $city);
+
+//Get astro info for current day
+$sunInfo = getTodaysSunData($forecastWeather);
+
+//Get weather info for next 5 hours from full hours array
+$next5Hour = getTodaysNext5HoursWeather(getPerHourWeather($forecastWeather, date("Y-m-d")));
+
+//Get chance of rain for current hour
+$chanceOfRain = getChanceOfRainForCurrentHour(getPerHourWeather($forecastWeather, date("Y-m-d")));
+
 $pageTitle = 'Weather';
-$forecastContent = template('forecast', [
-	'forecast_items' => $forecastWeather
+
+//Template for default page
+$content = template('default', [
+	'weather' => $forecastWeather,
+	'astro' => $sunInfo,
+	'perHour' => $next5Hour,
+	'chanceOfRain' => $chanceOfRain
 ]);
 
-$currentContent = template('current', ['content' => $forecastContent, 'weather' => $currentWeather, 'astro' => $astroInfo, 'perHour' => $perHourInfo]);
-
+//Main template
 $html = template('main', [
 	'title' => $pageTitle,
-	'content' => $currentContent
+	'content' => $content
 ]);
 
 echo $html;
