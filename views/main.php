@@ -29,8 +29,8 @@
                     Weather
                 </a>
                 <!-- Search -->
-                <form class="form-inline">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Enter city for search" aria-label="Search">
+                <form class="form-inline" action="index.php" method="post">
+                    <input name="city" class="form-control mr-sm-2" type="search" placeholder="Enter city for search" aria-label="Search">
                     <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
                 </form>
             </div>
@@ -41,9 +41,9 @@
                 <div class="row justify-content-around">
                     <nav class="nav nav-pills m-3">
                         <a class="nav-item nav-link btn btn-light border border-primary m-1" href="#">Yesterday</a>
-                        <a class="nav-item nav-link btn btn-light border border-primary m-1" href="index.php?forecast_days=5">5 days</a>
-                        <a class="nav-item nav-link btn btn-light border border-primary m-1" href="index.php?forecast_days=7">7 days</a>
-                        <a class="nav-item nav-link btn btn-light border border-primary m-1" href="index.php?forecast_days=10">10 days</a>
+                        <a class="nav-item nav-link btn btn-light border border-primary m-1" href="index.php?city=<?= $city; ?>&forecast_days=5">5 days</a>
+                        <a class="nav-item nav-link btn btn-light border border-primary m-1" href="index.php?city=<?= $city; ?>&forecast_days=7">7 days</a>
+                        <a class="nav-item nav-link btn btn-light border border-primary m-1" href="index.php?city=<?= $city; ?>&forecast_days=10">10 days</a>
                         <a class="nav-item nav-link btn btn-light border border-primary m-1" href="#">Past day</a>
                         <a class="nav-item nav-link btn btn-light border border-primary m-1" href="#">Future day</a>
                     </nav>

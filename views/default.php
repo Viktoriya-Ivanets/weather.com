@@ -10,7 +10,7 @@
     <div class="row justify-content-center">
         <?php foreach ($weather->forecast->forecastday as $forecast_item) : ?>
             <!-- link for a full day -->
-            <a href="index.php?date=<?= $forecast_item->date; ?><?= $forecast_days_param; ?>" class="col-12 col-md-2 border border-primary rounded mb-2 d-flex flex-column align-items-center text-decoration-none text-dark">
+            <a href="index.php?city=<?= $city; ?>&forecast_days=<?= $forecast_days_param; ?>&date=<?= $forecast_item->date; ?>" class="col-12 col-md-2 border border-primary rounded mb-2 d-flex flex-column align-items-center text-decoration-none text-dark">
                 <div class="row justify-content-center align-items-center"><?= $forecast_item->day_of_week ?></div>
                 <!-- day of week -->
                 <div class="row justify-content-center align-items-center"><?= $forecast_item->day_of_month ?></div>
