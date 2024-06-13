@@ -9,7 +9,8 @@
     <!-- forecast Info row -->
     <div class="row justify-content-center">
         <?php foreach ($weather->forecast->forecastday as $forecast_item) : ?>
-            <div class="col-12 col-md-2 border border-primary rounded mb-2 d-flex flex-column align-items-center">
+            <!-- link for a full day -->
+            <a href="index.php?date=<?= $forecast_item->date; ?><?= $forecast_days_param; ?>" class="col-12 col-md-2 border border-primary rounded mb-2 d-flex flex-column align-items-center text-decoration-none text-dark">
                 <div class="row justify-content-center align-items-center"><?= $forecast_item->day_of_week ?></div>
                 <!-- day of week -->
                 <div class="row justify-content-center align-items-center"><?= $forecast_item->day_of_month ?></div>
@@ -24,10 +25,11 @@
                 <!-- min temperature -->
                 <div class="row justify-content-center align-items-center d-none d-sm-flex"><?= $forecast_item->day->condition->text ?></div>
                 <!-- weather description -->
-            </div>
+            </a>
             <!-- /.col -->
         <?php endforeach; ?>
     </div>
+
     <!-- /.row -->
 </div>
 <!-- /.container -->

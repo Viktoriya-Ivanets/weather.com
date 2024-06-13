@@ -110,3 +110,21 @@ function getChanceOfRainForCurrentHour($perHour)
         }
     }
 }
+
+//Get average weather params for a full day page
+function getAverageWeatherParamsForDay($weatherData, $someDate)
+{
+    foreach ($weatherData->forecast->forecastday as $day) {
+
+        //If dates are equal
+        if ($day->date === $someDate) {
+            return $day->day;
+        }
+    }
+}
+
+//Returns formated date like: Saturday 22nd of June 2024
+function formatDate($date)
+{
+    return date('l jS \of F Y', strtotime($date));
+}
