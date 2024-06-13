@@ -31,6 +31,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	// If date mode
 	if (isset($_GET['date'])) {
 
+		//Get weather info for past day
+		if ($_GET['date'] < date("Y-m-d")) {
+			$forecastWeather = getHistoryInfo(API_KEY, $city, $_GET['date']);
+		}
+
+		//Get weather info for future day
+		if ($_GET['date'] > date("Y-m-d")) {
+			$forecastWeather = getFutureInfo(API_KEY, $city, $_GET['date']);
+		}
+
 		// Define a page title
 		$pageTitle = 'Weather on ' . $_GET['date'];
 
@@ -87,7 +97,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $html = template('main', [
 	'title' => $pageTitle,
 	'content' => $content,
-	'city' => $city
+	'city' => $city,
+	'yesterday_date' => date("Y-m-d", strtotime("yesterday"))
 ]);
 
 echo $html;
