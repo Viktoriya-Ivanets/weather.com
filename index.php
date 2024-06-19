@@ -2,17 +2,50 @@
 
 include_once('init.php');
 
-//Search mode
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+$pageTitle = 'Weather';
+$content = '';
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	// Handle form submission for search
 	$city = htmlspecialchars($_POST['city']);
 
-	//Get search info
+	// Get search info
 	$searchInfo = getSearchInfo(API_KEY, $city);
 
-	//Define page title
-	$pageTitle = 'Search for ' . $_POST['city'];
+	// Define page title
+	$pageTitle = 'Search for ' . $city;
+
+	// Template for search results page
+	$content = template('search', [
+		'search_items' => $searchInfo
+	]);
+
+	// Prepare the full HTML
+	$html = template('main', [
+		'title' => $pageTitle,
+		'content' => $content,
+		'city' => $city,
+		'yesterday_date' => date("Y-m-d", strtotime("yesterday"))
+	]);
+
+	// If it's an Ajax request, return only the content
+	if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+		echo $html;
+		exit;
+	} else {
+		// For non-Ajax requests, return the full HTML
+		echo $html;
+		exit;
+	}
+} else if (isset($_GET['city']) && isset($_GET['search'])) {
+	// Handle search results on page reload
+	$city = htmlspecialchars($_GET['city']);
+
+	// Get search info
+	$searchInfo = getSearchInfo(API_KEY, $city);
+
+	// Define page title
+	$pageTitle = 'Search for ' . $city;
 
 	// Template for search results page
 	$content = template('search', [
@@ -30,13 +63,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 	// If date mode
 	if (isset($_GET['date'])) {
-
-		//Get weather info for past day
+		// Get weather info for past day
 		if ($_GET['date'] < date("Y-m-d")) {
 			$forecastWeather = getHistoryInfo(API_KEY, $city, $_GET['date']);
 		}
 
-		//Get weather info for future day
+		// Get weather info for future day
 		if ($_GET['date'] > date("Y-m-d", strtotime("+2 weeks"))) {
 			$forecastWeather = getFutureInfo(API_KEY, $city, $_GET['date']);
 		}
@@ -47,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		// Get per hour weather for a full day
 		$perHourWeather = getPerHourWeather($forecastWeather, $_GET['date']);
 
-		// Get avg params 
+		// Get avg params
 		$avgParamsForDay = getAverageWeatherParamsForDay($forecastWeather, $_GET['date']);
 
 		// Template for full day page
@@ -57,16 +89,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			'dateTime' => formatDate($_GET['date']),
 			'avgParamsForDay' => $avgParamsForDay
 		]);
-	}
-
-	// Else default mode
-	else {
-
-		// Forecast days param for full day url
+	} else {
+		// Default mode
 		$forecast_days_param = $forecast_days;
 		if (str_contains($_SERVER['REQUEST_URI'], 'forecast_days')) {
-			$forecast_days_param =
-				getForecastDaysFromUri($_SERVER['REQUEST_URI']);
+			$forecast_days_param = getForecastDaysFromUri($_SERVER['REQUEST_URI']);
 		}
 
 		// Get astro info for current day

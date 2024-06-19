@@ -28,10 +28,11 @@
                     Weather
                 </a>
                 <!-- Search -->
-                <form class="form-inline" action="index.php" method="post">
+                <form id="searchForm" class="form-inline" action="index.php" method="post">
                     <input name="city" class="form-control mr-sm-2" type="search" placeholder="Enter city for search" aria-label="Search">
                     <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
                 </form>
+
             </div>
             <!-- /.card-header -->
             <!-- card-body -->
@@ -58,7 +59,7 @@
 
                 <!-- /.row -->
                 <!-- Output of content -->
-                <?= $content; ?>
+                <div class="content-container"><?= $content; ?></div>
             </div>
             <!-- /.card-body -->
             <!-- card-footer -->
@@ -81,11 +82,14 @@
             $("#past-day-btn, #future-day-btn").click(function(event) {
                 event.preventDefault();
                 var isFuture = $(this).attr('id') === 'future-day-btn';
+                //Params for future datepicker
                 if (isFuture) {
                     $("#date_header").text("Please choose some date. Date must be between 14 days and 300 days from today in the future");
                     $("#datepicker").datepicker("option", "minDate", "+15d");
                     $("#datepicker").datepicker("option", "maxDate", "+300d");
-                } else {
+                }
+                //Params for past datepicker
+                else {
                     $("#date_header").text("Please choose some date. Date must be between 365 days ago and today's date");
                     $("#datepicker").datepicker("option", "minDate", "-365d");
                     $("#datepicker").datepicker("option", "maxDate", new Date());
@@ -93,13 +97,43 @@
                 $("#datepicker").toggle();
                 $("#date_header").toggle();
             });
-
+            //Go to the per hour weather page for choosed date
             $("#datepicker").datepicker({
                 onSelect: function(dateText) {
                     var city = "<?= $city; ?>";
                     window.location.href = "index.php?city=" + city + "&date=" + dateText;
                 },
                 dateFormat: 'yy-mm-dd'
+            });
+        });
+        $(document).ready(function() {
+            $('#searchForm').submit(function(event) {
+                event.preventDefault(); // Prevent the form from submitting in the traditional way
+
+                var city = $('input[name="city"]').val(); // Get the value of the city input
+
+                $.ajax({
+                    url: 'index.php',
+                    type: 'POST',
+                    data: {
+                        city: city
+                    },
+                    success: function(response) {
+                        // Replace the current content with the new content
+                        $('.content-container').html($(response).find('.content-container').html());
+
+                        // Update the browser's URL without reloading the page
+                        if (history.pushState) {
+                            var newUrl = 'index.php?city=' + encodeURIComponent(city) + '&search=true';
+                            history.pushState(null, '', newUrl);
+                            document.title = 'Search for ' + city;
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle any errors
+                        console.error('Error: ' + error);
+                    }
+                });
             });
         });
     </script>
