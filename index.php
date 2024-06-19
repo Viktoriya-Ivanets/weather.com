@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		}
 
 		//Get weather info for future day
-		if ($_GET['date'] > date("Y-m-d")) {
+		if ($_GET['date'] > date("Y-m-d", strtotime("+2 weeks"))) {
 			$forecastWeather = getFutureInfo(API_KEY, $city, $_GET['date']);
 		}
 
@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$sunInfo = getTodaysSunData($forecastWeather);
 
 		// Get weather info for next 5 hours from full hours array
-		$next5Hour = getTodaysNext5HoursWeather(getPerHourWeather($forecastWeather, date("Y-m-d")));
+		$nextHours = getNext5HoursWeather(getPerHourWeather($forecastWeather, date("Y-m-d")), getPerHourWeather($forecastWeather, date("Y-m-d", strtotime("+1 day"))));
 
 		// Get chance of rain for current hour
 		$chanceOfRain = getChanceOfRainForCurrentHour(getPerHourWeather($forecastWeather, date("Y-m-d")));
@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$content = template('default', [
 			'weather' => $forecastWeather,
 			'astro' => $sunInfo,
-			'perHour' => $next5Hour,
+			'perHour' => $nextHours,
 			'chanceOfRain' => $chanceOfRain,
 			'forecast_days_param' => $forecast_days_param,
 			'city' => $city

@@ -76,14 +76,14 @@ function getPerHourWeather($weatherData, $someDate)
 }
 
 //Get weather info for next 5 hours this day
-function getTodaysNext5HoursWeather($perHour)
+function getNext5HoursWeather($todaysHours, $nextDayHours)
 {
     $currentTime = date("H:i");
 
     //New array for per hour info
     $next5Hours = [];
 
-    foreach ($perHour as $hour) {
+    foreach ($todaysHours as $hour) {
 
         //When items of array 5 - stop collecting
         if (count($next5Hours) >= 5) {
@@ -95,7 +95,16 @@ function getTodaysNext5HoursWeather($perHour)
             $next5Hours[] = $hour;
         }
     }
+    if (count($next5Hours) < 5) {
+        foreach ($nextDayHours as $hour) {
 
+            //When items of array 5 - stop collecting
+            if (count($next5Hours) >= 5) {
+                break;
+            }
+            $next5Hours[] = $hour;
+        }
+    }
     return $next5Hours;
 }
 

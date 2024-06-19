@@ -83,8 +83,12 @@
                 var isFuture = $(this).attr('id') === 'future-day-btn';
                 if (isFuture) {
                     $("#date_header").text("Please choose some date. Date must be between 14 days and 300 days from today in the future");
+                    $("#datepicker").datepicker("option", "minDate", "+15d");
+                    $("#datepicker").datepicker("option", "maxDate", "+300d");
                 } else {
-                    $("#date_header").text("Please choose some date. Date must be between 1st Jan, 2010 and today's date");
+                    $("#date_header").text("Please choose some date. Date must be between 365 days ago and today's date");
+                    $("#datepicker").datepicker("option", "minDate", "-365d");
+                    $("#datepicker").datepicker("option", "maxDate", new Date());
                 }
                 $("#datepicker").toggle();
                 $("#date_header").toggle();
