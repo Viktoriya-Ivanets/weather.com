@@ -6,12 +6,18 @@ include_once('init.php');
 $pageTitle = 'Weather';
 $content = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	//Request with search
-	handlePostRequest();
+if (!validateURL($_SERVER['REQUEST_URI'])) {
+	header('HTTP/1.1 400 Bad Request');
+	$pageTitle = 'Bad request';
+	$content = template('400');
 } else {
-	//Other requests
-	handleGetRequest();
+	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+		//Request with search
+		handlePostRequest();
+	} else {
+		//Other requests
+		handleGetRequest();
+	}
 }
 
 // Main template
@@ -123,8 +129,8 @@ function handleDateRequest($city, $forecastWeather)
 	//Get forecast weather for the past day
 	if ($date < date("Y-m-d")) {
 		$forecastWeather = getHistoryInfo(API_KEY, $city, $date);
-		//Get forecast weather for the future day
 	} elseif ($date > date("Y-m-d", strtotime("+2 weeks"))) {
+		//Get forecast weather for the future day
 		$forecastWeather = getFutureInfo(API_KEY, $city, $date);
 	}
 
