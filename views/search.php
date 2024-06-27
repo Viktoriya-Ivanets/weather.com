@@ -1,7 +1,13 @@
 <!-- Search content -->
 <!-- main row -->
 <div class="row d-block ml-5 mr-5">
-    <?php if (!empty($search_items)) : ?>
+    <?php if (empty($search_items) || is_object($search_items)) : ?>
+        <!-- no results row -->
+        <div class="row d-flex justify-content-center align-items-center m-5">
+            <h4>No results found</h4>
+        </div>
+        <!-- /.row -->
+    <?php else : ?>
         <!-- header row -->
         <div class="row d-flex justify-content-center align-items-center">
             <h4> Founded results:</h4>
@@ -19,12 +25,6 @@
             </div>
             <!-- /.row -->
         <?php endforeach; ?>
-    <?php else : ?>
-        <!-- no results row -->
-        <div class="row d-flex justify-content-center align-items-center">
-            <h4>No results found</h4>
-        </div>
-        <!-- /.row -->
     <?php endif; ?>
 </div>
 <!-- /.row -->

@@ -3,7 +3,7 @@
 include_once('init.php');
 
 //Get search info
-function getSearchInfo(string $apiKey, string $city)
+function getSearchInfo(string $apiKey, ?string $city)
 {
     //URL for request
     $googleApiUrl = "http://api.weatherapi.com/v1/search.json?key=$apiKey&q=$city";
