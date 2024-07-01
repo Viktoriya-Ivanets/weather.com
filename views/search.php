@@ -4,7 +4,7 @@
     <?php if (empty($search_items) || is_object($search_items)) : ?>
         <!-- no results row -->
         <div class="row d-flex justify-content-center align-items-center m-5">
-            <h4>No results found</h4>
+            <h4 class="text-center">No results found</h4>
         </div>
         <!-- /.row -->
     <?php else : ?>
