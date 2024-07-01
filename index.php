@@ -6,6 +6,7 @@ include_once('init.php');
 $pageTitle = 'Weather';
 $content = '';
 
+//Validate request URL
 if (!validateURL($_SERVER['REQUEST_URI'])) {
 	header('HTTP/1.1 400 Bad Request');
 	$pageTitle = 'Bad request';

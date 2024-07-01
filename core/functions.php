@@ -31,38 +31,49 @@ function getForecastDaysFromUri($uri)
 
     return $forecastDays;
 }
+//Validate forecast days - only defined array
 function validateForecastDays(int $days)
 {
     $availableDays = [5, 7, 10];
     return in_array($days, $availableDays);
 }
 
+//Validate date - Y-m-d format
 function validateDate($date, $format = 'Y-m-d')
 {
     $d = DateTime::createFromFormat($format, $date);
     return $d && $d->format($format) == $date;
 }
 
+//City name cannot contain numbers
 function validateCity($city)
 {
     return !preg_match('~[0-9]+~', $city);
 }
 
+//If one of params == false - bad request
 function validateURL(string $url)
 {
+    //parse URL
     $query_str = parse_url($url, PHP_URL_QUERY);
     parse_str($query_str, $query_params);
 
+    //validate search param
     if (isset($query_params['search']) && $query_params['search'] == 'false') {
         return false;
     }
+
+    //validate city param
     if (isset($query_params['city']) && !validateCity($query_params['city'])) {
         return false;
     }
+
+    //validate forecast days param
     if (isset($query_params['forecast_days']) && !validateForecastDays($query_params['forecast_days'])) {
         return false;
     }
 
+    //validate date - only defined ranges
     if (isset($query_params['date'])) {
         if (
             !validateDate($query_params['date']) ||
